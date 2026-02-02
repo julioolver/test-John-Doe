@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->bigInteger('balance')->default(0);
-            $table->boolean('can_transfer')->default(true);
             $table->timestamps();
         });
     }

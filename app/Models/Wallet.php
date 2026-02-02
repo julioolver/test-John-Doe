@@ -14,7 +14,6 @@ class Wallet extends Model
 
     protected $casts = [
         'balance' => 'integer',
-        'can_transfer' => 'boolean',
     ];
 
     protected $appends = [

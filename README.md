@@ -19,6 +19,9 @@ cp .env.example .env
 # subir containers
  docker compose up -d --build
 
+# dependências do projeto
+ docker compose exec app composer install
+
 # migrations e seeders
  docker compose exec app php artisan migrate --seed
 ```
@@ -26,7 +29,7 @@ cp .env.example .env
 ## Endpoint principal
 
 ```http request
-POST /api/transfers
+POST http://localhost:84/api/transfers
 Content-Type: application/json
 
 {

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Wallet extends Model
 {
     protected $fillable = [
         'user_id',
         'balance',
-        'can_transfer',
     ];
 
     protected $casts = [
@@ -20,7 +20,12 @@ class Wallet extends Model
         'balance_amount',
     ];
 
-    public function user()
+    /**
+     * Get the user that owns the wallet.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

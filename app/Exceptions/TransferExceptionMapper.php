@@ -2,24 +2,24 @@
 
 namespace App\Exceptions;
 
-use App\Domain\Shared\Exceptions\InvalidDocumentException;
-use App\Domain\Shared\Exceptions\UnauthorizedPayerException;
+use App\Domain\Transfer\Exception\AuthorizationDeniedException;
 use Illuminate\Foundation\Configuration\Exceptions;
+use RuntimeException;
 
-class UserExceptionMapper
+class TransferExceptionMapper
 {
     public static function register(Exceptions $exceptions): void
     {
-        $exceptions->render(function (InvalidDocumentException $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        });
-
-        $exceptions->render(function (UnauthorizedPayerException $e) {
+        $exceptions->render(function (AuthorizationDeniedException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], 403);
+        });
+
+        $exceptions->render(function (RuntimeException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 502);
         });
     }
 }

@@ -9,5 +9,7 @@ class ExceptionMapper
     public static function register(Exceptions $exceptions): void
     {
         UserExceptionMapper::register($exceptions);
+        WalletExceptionMapper::register($exceptions);
+        TransferExceptionMapper::register($exceptions);
     }
 }

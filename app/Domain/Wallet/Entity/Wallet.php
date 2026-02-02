@@ -7,11 +7,14 @@ namespace App\Domain\Wallet\Entity;
 use App\Domain\Shared\ValueObjects\Money;
 use App\Domain\Wallet\Exception\InvalidAmountException;
 use App\Domain\Wallet\Exception\InsufficientBalanceException;
+use App\Domain\User\Entity\User;
 
 class Wallet
 {
     public function __construct(
         public Money $balance,
+        public User $user,
+        public ?string $id = null,
     ) {}
 
     public function deposit(Money $amount): void

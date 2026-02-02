@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Transfer\UseCases;
 
 use App\Application\Transfer\Contracts\TransferRepository;
+use App\Application\Transfer\Contracts\AuthorizationGateway;
 use App\Application\Transfer\DTOs\TransferInputDTO;
 use App\Application\Transfer\DTOs\TransferOutputDTO;
 use App\Application\Shared\Contracts\TransactionManager;
@@ -20,11 +21,14 @@ class CreateTransferUseCase
         private TransferRepository $transferRepository,
         private WalletRepository $walletRepository,
         private TransactionManager $transactionManager,
+        private AuthorizationGateway $authorizationGateway,
     ) {}
 
     public function execute(TransferInputDTO $request): TransferOutputDTO
     {
         try {
+            $this->authorizationGateway->authorize();
+
             $createdTransfer = $this->transactionManager->run(function () use ($request) {
                 $payer = $this->walletRepository->getByUserIdForUpdate($request->payerId);
                 $payee = $this->walletRepository->getByUserIdForUpdate($request->payeeId);

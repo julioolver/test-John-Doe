@@ -17,7 +17,14 @@ class Money
 
     public static function fromDecimal(string $amount): self
     {
-        $cents = (int) bcmul($amount, '100', 0);
+        $normalized = str_replace(',', '.', trim($amount));
+
+        if (! preg_match('/^-?\d+(\.\d{1,2})?$/', $normalized)) {
+            throw new \InvalidArgumentException('Invalid money format.');
+        }
+
+        /** @var numeric-string $normalized */
+        $cents = (int) bcmul($normalized, '100', 0);
 
         return new self($cents);
     }

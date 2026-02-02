@@ -23,7 +23,7 @@ class CreateTransferRequest extends FormRequest
     {
         return [
             'payer' => 'required|exists:users,id',
-            'payee' => 'required|exists:users,id',
+            'payee' => 'required|exists:users,id|different:payer',
             'value' => ['required', 'numeric', 'gt:0', 'regex:/^\d+(\.\d{1,2})?$/'],
         ];
     }
@@ -35,6 +35,7 @@ class CreateTransferRequest extends FormRequest
             'payer.exists' => 'The payer does not exist.',
             'payee.required' => 'The payee is required.',
             'payee.exists' => 'The payee does not exist.',
+            'payee.different' => 'The payee must be different from the payer.',
             'value.required' => 'The value is required.',
             'value.numeric' => 'The value must be a number.',
             'value.gt' => 'The value must be greater than 0.',

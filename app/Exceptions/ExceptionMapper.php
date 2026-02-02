@@ -10,5 +10,6 @@ class ExceptionMapper
     {
         UserExceptionMapper::register($exceptions);
         WalletExceptionMapper::register($exceptions);
+        TransferExceptionMapper::register($exceptions);
     }
 }

@@ -12,6 +12,7 @@ class Wallet
 {
     public function __construct(
         public Money $balance,
+        public ?string $id = null,
     ) {}
 
     public function deposit(Money $amount): void

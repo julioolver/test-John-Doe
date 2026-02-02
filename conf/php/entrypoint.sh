@@ -2,14 +2,13 @@
 set -e
 
 # Ensure Laravel writable directories are accessible on bind mounts.
+# Avoid chown here to prevent failures on some host filesystems.
 if [ -d /var/www/html/storage ]; then
-  chown -R www-data:www-data /var/www/html/storage
-  chmod -R 775 /var/www/html/storage
+  chmod -R 775 /var/www/html/storage || true
 fi
 
 if [ -d /var/www/html/bootstrap/cache ]; then
-  chown -R www-data:www-data /var/www/html/bootstrap/cache
-  chmod -R 775 /var/www/html/bootstrap/cache
+  chmod -R 775 /var/www/html/bootstrap/cache || true
 fi
 
 exec "$@"

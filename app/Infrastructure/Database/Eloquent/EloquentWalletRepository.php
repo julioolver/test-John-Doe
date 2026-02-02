@@ -56,10 +56,17 @@ class EloquentWalletRepository implements WalletRepository
             throw new InvalidArgumentException('User not found for wallet.');
         }
 
+        /** @var DocumentType|string $documentTypeValue */
+        $documentTypeValue = $model->user->document_type;
+
+        $documentType = $documentTypeValue instanceof DocumentType
+            ? $documentTypeValue
+            : DocumentType::from($documentTypeValue);
+
         $user = new User(
             name: $model->user->name,
             email: $model->user->email,
-            document: Document::from($model->user->document, DocumentType::from($model->user->document_type)),
+            document: Document::from($model->user->document, $documentType),
             id: $this->modelKeyToString($model->user),
         );
 

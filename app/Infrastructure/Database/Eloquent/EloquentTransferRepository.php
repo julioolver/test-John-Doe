@@ -69,10 +69,17 @@ class EloquentTransferRepository implements TransferRepository
             throw new InvalidArgumentException('User not found for wallet.');
         }
 
+        /** @var DocumentType|string $documentTypeValue */
+        $documentTypeValue = $wallet->user->document_type;
+
+        $documentType = $documentTypeValue instanceof DocumentType
+            ? $documentTypeValue
+            : DocumentType::from($documentTypeValue);
+
         $user = new User(
             name: $wallet->user->name,
             email: $wallet->user->email,
-            document: Document::from($wallet->user->document, DocumentType::from($wallet->user->document_type)),
+            document: Document::from($wallet->user->document, $documentType),
             id: $this->modelKeyToString($wallet->user),
         );
 

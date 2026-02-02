@@ -18,12 +18,12 @@ class TransferController extends Controller
     {
         $payerId = $request->integer('payer');
         $payeeId = $request->integer('payee');
-        $amount = $request->string('amount')->toString();
+        $value = $request->string('value')->toString();
 
         $transferInputDTO = new TransferInputDTO(
             payerId: $payerId,
             payeeId: $payeeId,
-            amount: Money::fromDecimal($amount),
+            amount: Money::fromDecimal($value),
         );
 
         $transferOutputDTO = $this->createTransferUseCase->execute($transferInputDTO);

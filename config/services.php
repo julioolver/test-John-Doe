@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'authorization' => [
+        'url' => env('AUTHORIZATION_URL', 'https://util.devi.tools/api/v2/authorize'),
+        'timeout' => (int) env('AUTHORIZATION_TIMEOUT', 5),
+    ],
+
 ];

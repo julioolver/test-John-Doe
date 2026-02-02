@@ -52,6 +52,50 @@ O PicPay Simplificado é uma plataforma de pagamentos simplificada. Nela é poss
 de dinheiro entre usuários. Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinheiro e realizam
 transferências entre eles.
 
+## Como rodar o projeto
+
+```bash
+# subir os containers
+docker compose up -d --build
+
+# rodar migrations + seeders
+docker compose exec app php artisan migrate --seed
+```
+
+### Endpoint principal
+
+```http request
+POST /api/transfers
+Content-Type: application/json
+
+{
+  "value": 100.0,
+  "payer": 1,
+  "payee": 3
+}
+```
+
+## Estrutura de pastas (Clean Architecture)
+
+```
+app/
+  Domain/          # regras de negócio puras (entities, VOs, exceções)
+  Application/     # casos de uso, DTOs e contratos (interfaces)
+  Infrastructure/  # implementações (Eloquent, HTTP, DB)
+  Http/            # controllers e requests
+  Exceptions/      # mapeamento de exceções para respostas HTTP
+```
+
+## Comandos úteis
+
+```bash
+# testes unitários
+docker compose exec app php artisan test
+
+# PHPStan
+docker compose exec app ./vendor/bin/phpstan analyse --memory-limit=1G
+```
+
 ### Requisitos
 
 A seguir estão algumas regras de negócio que são importantes para o funcionamento do PicPay Simplificado:

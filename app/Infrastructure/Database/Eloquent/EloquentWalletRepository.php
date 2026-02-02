@@ -12,6 +12,7 @@ use App\Domain\User\ValueObjects\Document;
 use App\Domain\User\ValueObjects\DocumentType;
 use App\Models\Wallet as WalletModel;
 use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model;
 
 class EloquentWalletRepository implements WalletRepository
 {
@@ -59,13 +60,21 @@ class EloquentWalletRepository implements WalletRepository
             name: $model->user->name,
             email: $model->user->email,
             document: Document::from($model->user->document, DocumentType::from($model->user->document_type)),
-            id: (string) $model->user->getKey(),
+            id: $this->modelKeyToString($model->user),
         );
 
         return new Wallet(
             balance: Money::fromCents($model->balance),
             user: $user,
-            id: (string) $model->getKey(),
+            id: $this->modelKeyToString($model),
         );
+    }
+
+    private function modelKeyToString(Model $model): ?string
+    {
+        /** @var int|string|null $key */
+        $key = $model->getKey();
+
+        return $key !== null ? (string) $key : null;
     }
 }

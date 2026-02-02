@@ -8,6 +8,10 @@ interface TransactionManager
 {
     /**
      * Runs the callback inside a database transaction.
+     *
+     * @template T
+     * @param callable(): T $callback
+     * @return T
      */
     public function run(callable $callback): mixed;
 }

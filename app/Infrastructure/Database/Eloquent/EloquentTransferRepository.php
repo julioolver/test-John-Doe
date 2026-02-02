@@ -14,6 +14,7 @@ use App\Domain\Wallet\Entity\Wallet as DomainWallet;
 use App\Models\Transfer as TransferModel;
 use App\Models\Wallet as WalletModel;
 use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model;
 
 class EloquentTransferRepository implements TransferRepository
 {
@@ -54,7 +55,7 @@ class EloquentTransferRepository implements TransferRepository
             amount: Money::fromCents($model->amount),
             status: $model->status,
             createdAt: $model->created_at?->toDateTime() ?? new \DateTime(),
-            id: (string) $model->getKey(),
+            id: $this->modelKeyToString($model),
         );
     }
 
@@ -72,13 +73,21 @@ class EloquentTransferRepository implements TransferRepository
             name: $wallet->user->name,
             email: $wallet->user->email,
             document: Document::from($wallet->user->document, DocumentType::from($wallet->user->document_type)),
-            id: (string) $wallet->user->getKey(),
+            id: $this->modelKeyToString($wallet->user),
         );
 
         return new DomainWallet(
             balance: Money::fromCents($wallet->balance),
             user: $user,
-            id: (string) $wallet->getKey(),
+            id: $this->modelKeyToString($wallet),
         );
+    }
+
+    private function modelKeyToString(Model $model): ?string
+    {
+        /** @var int|string|null $key */
+        $key = $model->getKey();
+
+        return $key !== null ? (string) $key : null;
     }
 }

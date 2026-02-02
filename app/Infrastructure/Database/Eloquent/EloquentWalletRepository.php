@@ -5,22 +5,61 @@ declare(strict_types=1);
 namespace App\Infrastructure\Database\Eloquent;
 
 use App\Application\Wallet\Contracts\WalletRepository;
-use App\Domain\Wallet\Entity\Wallet;
-use App\Models\Wallet as WalletModel;
 use App\Domain\Shared\ValueObjects\Money;
+use App\Domain\Wallet\Entity\Wallet;
 use App\Domain\User\Entity\User;
 use App\Domain\User\ValueObjects\Document;
 use App\Domain\User\ValueObjects\DocumentType;
+use App\Models\Wallet as WalletModel;
+use InvalidArgumentException;
 
 class EloquentWalletRepository implements WalletRepository
 {
-    public function getByUserId(int $userId): Wallet {
+    public function getByUserId(int $userId): Wallet
+    {
         $model = WalletModel::where('user_id', $userId)->first();
+
+        return $this->mapToDomain($model);
+    }
+
+    public function getByUserIdForUpdate(int $userId): Wallet
+    {
+        $model = WalletModel::where('user_id', $userId)
+            ->lockForUpdate()
+            ->first();
+
+        return $this->mapToDomain($model);
+    }
+
+    public function updateBalance(int $userId, Money $amount): bool
+    {
+        $model = WalletModel::where('user_id', $userId)->first();
+
+        if (! $model) {
+            return false;
+        }
+
+        $model->balance = $amount->cents();
+        $model->save();
+
+        return true;
+    }
+
+    private function mapToDomain(?WalletModel $model): Wallet
+    {
+        if (! $model) {
+            throw new InvalidArgumentException('Wallet not found for user.');
+        }
+
+        if (! $model->user) {
+            throw new InvalidArgumentException('User not found for wallet.');
+        }
 
         $user = new User(
             name: $model->user->name,
             email: $model->user->email,
             document: Document::from($model->user->document, DocumentType::from($model->user->document_type)),
+            id: (string) $model->user->getKey(),
         );
 
         return new Wallet(

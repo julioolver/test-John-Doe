@@ -40,4 +40,9 @@ return [
         'timeout' => (int) env('AUTHORIZATION_TIMEOUT', 5),
     ],
 
+    'notification' => [
+        'url' => env('NOTIFICATION_URL', 'https://util.devi.tools/api/v1/notify'),
+        'timeout' => (int) env('NOTIFICATION_TIMEOUT', 5),
+    ],
+
 ];

@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Application\Shared\Contracts\TransactionManager;
 use App\Application\Transfer\Contracts\AuthorizationGateway;
+use App\Application\Transfer\Contracts\NotificationGateway;
 use App\Application\Transfer\Contracts\TransferRepository;
 use App\Application\Wallet\Contracts\WalletRepository;
 use App\Infrastructure\Database\Eloquent\EloquentTransferRepository;
 use App\Infrastructure\Database\Eloquent\EloquentWalletRepository;
 use App\Infrastructure\Database\LaravelTransactionManager;
 use App\Infrastructure\Http\HttpAuthorizationGateway;
+use App\Infrastructure\Http\HttpNotificationGateway;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(WalletRepository::class, EloquentWalletRepository::class);
         $this->app->bind(TransactionManager::class, LaravelTransactionManager::class);
         $this->app->bind(AuthorizationGateway::class, HttpAuthorizationGateway::class);
+        $this->app->bind(NotificationGateway::class, HttpNotificationGateway::class);
     }
 
     /**

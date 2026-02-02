@@ -6,6 +6,7 @@ namespace App\Application\Transfer\UseCases;
 
 use App\Application\Transfer\Contracts\TransferRepository;
 use App\Application\Transfer\Contracts\AuthorizationGateway;
+use App\Application\Transfer\Contracts\NotificationGateway;
 use App\Application\Transfer\DTOs\TransferInputDTO;
 use App\Application\Transfer\DTOs\TransferOutputDTO;
 use App\Application\Shared\Contracts\TransactionManager;
@@ -22,6 +23,7 @@ class CreateTransferUseCase
         private WalletRepository $walletRepository,
         private TransactionManager $transactionManager,
         private AuthorizationGateway $authorizationGateway,
+        private NotificationGateway $notificationGateway,
     ) {}
 
     public function execute(TransferInputDTO $request): TransferOutputDTO
@@ -47,6 +49,16 @@ class CreateTransferUseCase
             $this->recordFailedTransfer($request);
 
             throw $exception;
+        }
+
+        try {
+            $this->notificationGateway->notify(
+                $request->payerId,
+                $request->payeeId,
+                $request->amount->cents()
+            );
+        } catch (Throwable) {
+            // Notification failures must not affect the transfer.
         }
 
         return new TransferOutputDTO($createdTransfer);

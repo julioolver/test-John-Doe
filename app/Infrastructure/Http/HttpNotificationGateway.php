@@ -13,7 +13,6 @@ class HttpNotificationGateway implements NotificationGateway
 {
     public function notify(int $payerId, int $payeeId, int $amountCents): void
     {
-        dd(config('services.notification.url'));
         $url = config('services.notification.url');
         $timeout = config('services.notification.timeout', 5);
 

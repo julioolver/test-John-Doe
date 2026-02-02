@@ -4,37 +4,59 @@ declare(strict_types=1);
 
 namespace App\Domain\Wallet\Entity;
 
+use App\Domain\Shared\ValueObjects\Money;
+use App\Domain\Wallet\Exception\CannotTransferException;
+use App\Domain\Wallet\Exception\InvalidAmountException;
 use App\Domain\Wallet\Exception\InsufficientBalanceException;
 
 class Wallet
 {
     public function __construct(
-        public int $balance,
+        public Money $balance,
         public bool $canTransfer,
     ) {}
 
-    public function deposit(int $amount): void
+    public function deposit(Money $amount): void
     {
-        $this->balance += $amount;
+        $this->ensurePositiveAmount($amount);
+        $this->balance = $this->balance->add($amount);
     }
 
-    public function withdraw(int $amount): void
+    public function withdraw(Money $amount): void
     {
-        $this->balance -= $amount;
+        $this->ensurePositiveAmount($amount);
+        $this->balance = $this->balance->subtract($amount);
     }
 
-    public function transfer(Wallet $to, int $amount): void
+    public function transfer(Wallet $to, Money $amount): void
     {
+        $this->ensureCanTransfer();
         $this->ensureHasBalance($amount);
 
         $this->withdraw($amount);
         $to->deposit($amount);
     }
 
-    public function ensureHasBalance(int $amount): void
+    public function ensureHasBalance(Money $amount): void
     {
-        if ($this->balance < $amount) {
+        $this->ensurePositiveAmount($amount);
+
+        if (! $this->balance->greaterThanOrEqual($amount)) {
             throw new InsufficientBalanceException('Insufficient balance to transfer.');
+        }
+    }
+
+    public function ensureCanTransfer(): void
+    {
+        if (! $this->canTransfer) {
+            throw new CannotTransferException('Wallet cannot transfer.');
+        }
+    }
+
+    private function ensurePositiveAmount(Money $amount): void
+    {
+        if (! $amount->isPositive()) {
+            throw new InvalidAmountException('Amount must be greater than zero.');
         }
     }
 }

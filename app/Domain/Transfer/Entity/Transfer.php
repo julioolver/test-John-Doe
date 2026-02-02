@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Transfer\Entity;
 
 use App\Domain\Shared\ValueObjects\Money;
-use App\Models\Wallet;
+use App\Domain\Wallet\Entity\Wallet;
 use App\Domain\Transfer\Enums\TransferStatus;
 
 class Transfer
@@ -15,7 +15,7 @@ class Transfer
         public Wallet $payee,
         public Money $amount,
         public TransferStatus $status = TransferStatus::PENDING,
-        public \DateTime $createdAt,
+        public \DateTime $createdAt = new \DateTime(),
         public ?string $id = null,
     ) {}
 

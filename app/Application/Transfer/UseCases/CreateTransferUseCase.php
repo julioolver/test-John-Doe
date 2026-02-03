@@ -14,6 +14,7 @@ use App\Application\Wallet\Contracts\WalletRepository;
 use App\Domain\Transfer\Entity\Transfer;
 use App\Domain\Transfer\Enums\TransferStatus;
 use App\Domain\Wallet\Entity\Wallet;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class CreateTransferUseCase
@@ -24,6 +25,7 @@ class CreateTransferUseCase
         private TransactionManager $transactionManager,
         private AuthorizationGateway $authorizationGateway,
         private NotificationGateway $notificationGateway,
+        private LoggerInterface $logger,
     ) {}
 
     public function execute(TransferInputDTO $request): TransferOutputDTO
@@ -59,8 +61,13 @@ class CreateTransferUseCase
                 $request->payeeId,
                 $request->amount->cents()
             );
-        } catch (Throwable) {
-            // Notification failures must not affect the transfer.
+        } catch (Throwable $exception) {
+            $this->logger->warning('Notification failed', [
+                'payer_id' => $request->payerId,
+                'payee_id' => $request->payeeId,
+                'amount_cents' => $request->amount->cents(),
+                'error' => $exception->getMessage(),
+            ]);
         }
 
         return new TransferOutputDTO($createdTransfer);

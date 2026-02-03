@@ -20,6 +20,7 @@ use App\Domain\User\ValueObjects\Document;
 use App\Domain\User\ValueObjects\DocumentType;
 use App\Domain\Wallet\Entity\Wallet;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class CreateTransferUseCaseTest extends TestCase
 {
@@ -39,7 +40,8 @@ class CreateTransferUseCaseTest extends TestCase
             $walletRepo,
             $transactionManager,
             $authorization,
-            $notification
+            $notification,
+            new NullLogger()
         );
 
         $input = new TransferInputDTO(
@@ -73,7 +75,8 @@ class CreateTransferUseCaseTest extends TestCase
             $walletRepo,
             $transactionManager,
             $authorization,
-            $notification
+            $notification,
+            new NullLogger()
         );
 
         $input = new TransferInputDTO(
@@ -109,7 +112,8 @@ class CreateTransferUseCaseTest extends TestCase
             $walletRepo,
             $transactionManager,
             $authorization,
-            $notification
+            $notification,
+            new NullLogger()
         );
 
         $input = new TransferInputDTO(

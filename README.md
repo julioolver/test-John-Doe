@@ -1,6 +1,7 @@
 # Pagamentos Simplificados API
 
-Projeto backend para transferências entre usuarios com carteiras, seguindo regras de negocio, transação atômica e integrações externas de autorização e notificação. Foi utlizado seeder do Laravel para popular usuários e carteiras, sendo IDs 1 e 2 para usuários comuns e ID 30 para lojista. 
+Projeto backend para transferências entre usuarios com carteiras, seguindo regras de negocio, transação atômica e integrações externas de autorização e notificação. Foi utlizado seeder do Laravel para popular usuários e carteiras, sendo IDs 1 e 2 para usuários comuns e ID 3 para lojista.
+Utilizado PHP 8.4 com framework Laravel 12. 
 ## Visao geral
 
 - Usuários comuns (CPF) podem transferir

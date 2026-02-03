@@ -1,14 +1,13 @@
 # Pagamentos Simplificados API
 
-Projeto backend para transferencias entre usuarios com carteiras, seguindo regras de negocio, transacao atomica e integracoes externas de autorizacao e notificacao.
-
+Projeto backend para transferências entre usuarios com carteiras, seguindo regras de negocio, transação atômica e integrações externas de autorização e notificação. Foi utlizado seeder do Laravel para popular usuários e carteiras, sendo IDs 1 e 2 para usuários comuns e ID 30 para lojista. 
 ## Visao geral
 
-- Usuarios comuns (CPF) podem transferir
+- Usuários comuns (CPF) podem transferir
 - Lojistas (CNPJ) apenas recebem
 - Carteiras com saldo em centavos
-- Autorizacao externa antes da transferencia
-- Notificacao externa apos a transferencia
+- Autorização externa antes da transferência
+- Notificação externa apos a transferência
 
 ## Como rodar o projeto
 
@@ -43,22 +42,22 @@ Content-Type: application/json
 
 ```
 app/
-  Domain/          # regras de negocio puras (entidades, VOs, excecoes)
+  Domain/          # regras de negócio puras (entidades, VOs, excecoes)
   Application/     # casos de uso, DTOs e contratos (interfaces)
   Infrastructure/  # implementacoes (Eloquent, HTTP, DB)
   Http/            # controllers e requests
-  Exceptions/      # mapeamento de excecoes para respostas HTTP
+  Exceptions/      # mapeamento de exceções para respostas HTTP
 ```
 
-## Regras de negocio implementadas
+## Regras de negócio implementadas
 
-- Usuarios comuns podem transferir; lojistas apenas recebem
-- Validacao de saldo antes da transferencia
-- Transacao atomica (rollback em falha)
+- Usuários comuns podem transferir; lojistas apenas recebem
+- Validação de saldo antes da transferência
+- Transação atomica (rollback em falha)
 - Autorizador externo (GET)
-- Notificacao externa (POST) sem impactar a transacao
+- Notificação externa (POST) sem impactar a transação
 
-## Integracoes externas
+## Integrações externas
 
 - Autorizador: `AUTHORIZATION_URL`
 - Notificacao: `NOTIFICATION_URL`

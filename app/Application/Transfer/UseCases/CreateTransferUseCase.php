@@ -29,13 +29,15 @@ class CreateTransferUseCase
     public function execute(TransferInputDTO $request): TransferOutputDTO
     {
         try {
-            $this->authorizationGateway->authorize();
-
             $createdTransfer = $this->transactionManager->run(function () use ($request) {
                 $payer = $this->walletRepository->getByUserIdForUpdate($request->payerId);
                 $payee = $this->walletRepository->getByUserIdForUpdate($request->payeeId);
 
                 $payer->user->assertCanTransfer();
+
+                $payer->ensureHasBalance($request->amount);
+
+                $this->authorizationGateway->authorize();
 
                 $transfer = $this->createTransfer($request, $payer, $payee);
                 $transfer->execute();
